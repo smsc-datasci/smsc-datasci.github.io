@@ -1,0 +1,736 @@
+# Importing & exporting
+
+```{r setup, include=FALSE}
+library(tidyverse)
+
+knitr::opts_chunk$set(echo = TRUE,
+                      eval = FALSE)
+```
+
+Material covered in this lesson includes:
+
+-   Why work in a project?
+-   Reading data
+-   Explore your data!
+-   Writing data
+
+I rely heavily on the readr package when reading in data. This is one of the **core packages** of the tidyverse. Core tidyverse packages are those that are loaded with `library(tidyverse)`.
+
+## Data for this lesson
+
+We will use the following real datasets in this lesson:
+
+**Global populations and CO~2~ emissions: API_EN.ATM.CO2E...csv**: These data were compiled by the [World Bank DataBank](https://databank.worldbank.org/home.aspx) and provides information on the emissions of greenhouse gases and the populations of countries around the world. Neither the tabular data nor the name of the file were modified from the original version.
+
+**Iris: iris.csv and iris.rds**: This is Edgar Anderson's famous data set that provides the measurements of flowers of three species of iris, *Iris setosa*, *I. versicolor*, and *I. virginica*. See `?iris` for more information (or the original paper at [this link](https://www.jstor.org/stable/2394164)!).
+
+**Portal rodents: portal.csv and portal.xlsx**. These datasets provide measurements taken in a long term study (the Portal project) on rodent traits in Portal, Arizona. The provided data were collected in a fixed grid established in 1977 and include when an individual was measured, where the measurement occurred, the sex and species of the individual, and their hindfoot length. You can read more about this study and the data they collected at [this link](https://portal.weecology.org/). I intentionally made the data a good bit messier than the original version.
+
+## Why work in a project?
+
+We will do all of our reading, exploring, and writing data from inside of an RStudio project. Projects have many benefits -- probably the largest of them is that all paths to data and code are supplied relative to your project folder.
+
+For example, I am working in a project called `data_sci`. The path to my `data_sci` folder (the parent folder of my project) is:
+
+```         
+/Volumes/ssd980/gits/datasci_2023/data_sci
+```
+
+This project contains a subfolder called `data` and in that folder is a subfolder called `raw`. The full path to the folder `raw` is therefore:
+
+```         
+/Volumes/ssd980/gits/datasci_2023/data_sci/data/raw
+```
+
+*Note: The folder `data` may also be considered a "child" of its parent folder, `data_sci`. Likewise, the folder `raw` is a child of its parent folder, `data`.*
+
+The `raw` data folder contains a *.csv* file called `portal.csv`. The full path to this file is:
+
+```         
+/Volumes/ssd980/gits/datasci_2023/data_sci/data/raw/portal.csv
+```
+
+Reading data with a full file path is super cumbersome (**Do not run!**):
+
+```{r, eval = FALSE}
+read_csv("/Volumes/ssd980/gits/datasci_2023/data_sci/data/raw/portal.csv")
+```
+
+The above has two problems:
+
+-   If we share our code with others or change our folder structure, the file path will need to be modified
+-   That"s a lot of writing for each file that we read in!
+
+When we work within a project, the folder that contains the *.Rproj* file is the working directory for the project. The path to our files within the working directory is written as a **relative file path**. A relative file path is the path to a file *relative* to the working directory. Given that my working directory is the folder `data_sci`, the reading operation above would be written as:
+
+```{r, eval = FALSE}
+read_csv("data/raw/portal.csv")
+```
+
+In Base R, we can set our working directory using the function `setwd()`. Before RStudio came along, this function was on the top of most of our scripts. It might have look something like (**Do not run!**):
+
+```{r, eval = FALSE}
+# My code for the tutorial: reading, exploring, and writing data
+
+# setup --------------------------------------------------------
+
+library(tidyverse)
+
+# Set working directory:
+
+setwd("/Volumes/ssd980/gits/datasci_2023/data_sci")
+
+# Read in portal data:
+
+read_csv("data/raw/portal.csv")
+```
+
+This certainly helps reduce the amount of writing required to read in files. However ...
+
+::: mysecret
+<i class="fas fa-user-secret" style="font-size:36px"></i>  [Never use `setwd()`!]{style="font-size: 20px"}
+
+Using `setwd()` in your code is dangerous because shared code will never work out-of-the-box. You will have to communicate to others (and your future self) to modify their working directory to match the location on their file systems. Conversely, if you share a **project** with your collaborators, everything will already be in place for them to execute the code.
+
+Even more importantly, you might change your mind about where you want to put your code or files. If you move your files to a new location, your code will no longer run until you modify the path within the `setwd()` function. Your code will be "broken". When you use projects, you can move your project anywhere you want in your file system and R will still be able to find your files.
+:::
+
+## Reading data
+
+We covered this topic in our video "Reading data", so this section will serve as a review of the key concepts covered and functions used in that video.
+
+### Read csv files
+
+Tabular data are most often stored as comma separated values (*.csv* files). This is a robust format because it does not contain hidden encoding that can sometimes lead to problems (see Excel, below).
+
+It is best to read in *.csv* files with the *readr* function `read_csv()`:
+
+```{r}
+read_csv("data/raw/iris.csv")
+```
+
+When tabular data are read in using `read_csv()`, the data are arranged into a tibble data frame. Additional information about the reading process (i.e., conversion of raw data to a tibble) are printed and may provide clues to potential problems.
+
+Conversely, when data read in using the base R function `read.csv()`, no additional information is printed and the data are arranged into a standard data frame (*Note: I chose not to run this because it would have taken up a lot of tutorial real estate!*):
+
+```{r, eval = FALSE}
+read.csv("data/raw/iris.csv")
+```
+
+::: mysecret
+<i class="fas fa-user-secret" style="font-size:36px"></i>   [Do not use `read.csv()`!]{style="font-size: 20px"}
+
+Whenever you use `read.csv()`, additional exploration steps are necessary to search for errors in your data (see Data exploration, below). It is best to be avoided.
+:::
+
+<br>
+
+#### Sometimes reading a csv file is not as easy as it should be ...
+
+While encoding is not a problem with *.csv* files, there are often issues with the data that mess up the reading process. For example, the table below represents raw data that I obtained from the World Bank website:
+
+```{r}
+read_csv("data/raw/API_EN.ATM.CO2E.PC_DS2_en_csv_v2_2764620.csv")
+```
+
+Here, we can see that a weird column name was added to the data -- a missing column name was replaced with the unhelpful column name `...3` (see `## New names`). Looking at the data in the tibble above, we can see the source of the problem. It seems that the character values associated with *what should have been the column names* were printed on the second row of the data frame. This suggests that the top rows of the tabular data contained information that should not be a part of the data frame.
+
+Additional arguments can be passed to `read_csv()` to address this problem (and others; see `?read_csv`):
+
+```{r}
+read_csv(
+  "data/raw/API_EN.ATM.CO2E.PC_DS2_en_csv_v2_2764620.csv", 
+  skip = 4, 
+  skip_empty_rows = FALSE)
+```
+
+::: mysecret
+<i class="fas fa-user-secret" style="font-size:36px"></i>   [Read the help files!]{style="font-size: 20px"}
+
+Whenever you use a function for the first time, or use a function to address a new application, it is a best practice to read the help file for that function (e.g., `?read_lines`). Because functions may change over time, it is also worthwhile to revisit their help files on occasion.
+:::
+
+::: now_you
+{{< fa pen-to-square size=2x >}} [Explore `read_csv()`]{style="font-size: 1.25em;"}
+
+Using the file above, explore other options for reading in the file with `read_csv()`. Did we have to use the arguments `skip = 4` and `skip_empty_rows = FALSE`? What could you have done instead?
+:::
+
+### Read RDS files
+
+By far the most straightforward of the file types to read in is the RDS file (but see the caveat associated with these files in "Writing data", below). RDS files are data sets that are written in, and written for, program R.
+
+We can read in an RDS file with the function `read_rds()`:
+
+```{r}
+read_rds("data/raw/iris.rds")
+```
+
+Notice in the above that the first column, species, was read in as a factor. That"s because an RDS file will read in the data with the class and type in which they were written.
+
+Likewise, an RDS file will maintain all attributes associated with a file:
+
+```{r}
+read_rds("data/raw/four_instruments.rds")
+```
+
+The character vector above was provided with a *names* attribute. Those names were maintained when the data were written as an RDS *and* when the RDS was read back into R.
+
+### Read Excel files
+
+Excel files can be challenging to read into R but luckily the package `readxl` has made the process fairly straightforward.
+
+The `readxl` package is part of the tidyverse, but it is not one of the core packages. As such, we have a choice -- we can load the library at the top of our script (i.e., `library(readxl)`) or call functions from the package directly (e.g., `readxl::read_excel`). The double colon operator, `::` is used to access variables in a package. I prefer to use `::` when I only use functions from a package only once or twice in a given script and choose `library([package])` if I use the package often.
+
+Each table in an Excel file is typically stored within worksheets (the tabs on the bottom of the Excel window). Before we read in an Excel file, we should check how many worksheets are present. To do so, we use the function `readxl::excel_sheets()`:
+
+```{r}
+readxl::excel_sheets("data/raw/portal.xlsx")
+```
+
+The above returned an atomic character vector with two values, where each value represents the name of a worksheet in the file `portal.xlsx`.
+
+By default, the function `readxl::read_excel()` will read in *only* the first worksheet in the file:
+
+```{r}
+readxl::read_excel("data/raw/portal.xlsx")
+```
+
+If we would like to read in a different worksheet, we can supply the argument `sheet = [name of sheet]` (Note: See `?readxl::read_excel`):
+
+```{r}
+readxl::read_excel("data/raw/portal.xlsx", sheet = "site_7")
+```
+
+In the above, we notice that there are quite a few bad column names and what is most likely the correct column names are printed on the fourth line of data. We can add a `skip = [number of rows]` argument to skip the first few rows of data:
+
+```{r}
+readxl::read_excel(
+  "data/raw/portal.xlsx", 
+  sheet = "site_7",
+  skip = 4)
+```
+
+Notice in the above that the column `Date collected` probably should contain a vector of dates but instead it is a character vector, where each value is a set of numbers. That"s because Excel uses a bunch of encoding to generate dates and stores date values in a different format than is presented on the screen.
+
+We can specify the types of columns present by providing a character vector of column types.We do this with the `col_types` argument:
+
+```{r}
+readxl::read_excel(
+  "data/raw/portal.xlsx", 
+  sheet = "site_7",
+  skip = 4,
+  col_types = 
+    c("text",
+      "date", 
+      "text",
+      "text",
+      "numeric"))
+```
+
+The above returned a warning message that there was a parsing issue in cells B35 and B36 -- neither value could be converted into a date. That"s because the author of the spreadsheet (which was actually me here, just to exhibit an all-too-common problem) used the cells to record metadata.
+
+The most straightforward way to address this is to read in only the range of cells that we are interested in. Excel columns are assigned to uppercase letters, the first column we read in, `Plot`, is "A" and the last column (counting from the left), `Weight`, is "E". Excel rows are assigned to numbers. Based on our warning message, we know that our data end on line 34. Because we skipped the first four rows of data, we know that our column names are listed on line 5. Based on this information we can specify the `range` of cells to read in as:
+
+```{r}
+readxl::read_excel(
+  "data/raw/portal.xlsx", 
+  sheet = "site_7",
+  range = "A5:E34",
+  col_types = 
+    c("text",
+      "date", 
+      "text",
+      "text",
+      "numeric"))
+```
+
+We can also specify the column names directly. To do so, we read in only the cells that contain data (thus skip the cells that contain column names) and specify our own character vector of column names:
+
+```{r}
+readxl::read_excel(
+  "data/raw/portal.xlsx",
+  sheet = "site_7",
+  range = "A6:E34",
+  col_names = 
+    c("plot",
+      "date", 
+      "family",
+      "species", 
+      "weight"),
+  col_types = 
+    c("text",
+      "date", 
+      "text",
+      "text",
+      "numeric"))
+```
+
+## Data exploration
+
+Whenever we read in data, it is crucial to take the time to explore its class, structure, composition, and the distribution of values.
+
+If we read in a non-tibble data frame, we should be sure to explore the structure with the function `pillar::glimpse()`. The package `pillar` is part of the **core tidyverse** so, with *tidyverse* loaded you simply need to supply the name of the function and the data frame that you would like to explore:
+
+```{r}
+glimpse(my_df)
+```
+
+In the above, we see the number of observations (rows) and number of variables (columns). We are also given information on the name and class of each column and the first few values in each.
+
+In a tibble data frame, this information is printed by default:
+
+```{r}
+my_tibble
+```
+
+Despite this handy printing of the tibble, we often need to use the number of rows or columns in a data frame programmatically.
+
+We can determine the number of rows with `nrow()`:
+
+```{r}
+nrow(my_tibble)
+```
+
+And determine the number of columns with `ncol()`:
+
+```{r}
+ncol(my_tibble)
+```
+
+Note that because a data frame *is* a list, and each column represents a list item, the function `length()` will return the number of columns:
+
+```{r}
+length(my_tibble)
+```
+
+We can return the number of rows and columns at the same time using the function `dim()`:
+
+```{r}
+dim(my_tibble)
+```
+
+This returned an integer vector of dimensions in the rows (the first number) and columns (the second number).
+
+If you"ve got too many functions swimming around in your brain, it is worth noting that you can use the function `dim()` and indexing to get the number of rows in the data frame:
+
+```{r}
+dim(my_tibble)[[1]]
+```
+
+... or the number of columns:
+
+```{r}
+dim(my_tibble)[[2]]
+```
+
+### Heads and tails
+
+The dplyr package, part of the tidyverse core, contains a set of functions that start with the prefix `slice_` that allows you to print a subset of the data (see `?slice`).
+
+We can print the top row of a data frame using the function `slice_head()`:
+
+```{r}
+slice_head(iris)
+```
+
+... or print the bottom row of a data frame using the function `slice_tail()`:
+
+```{r}
+slice_tail(iris)
+```
+
+With the argument `n = [number of rows]`, we can subset to the number of rows of our choosing. For example, to view just the first two rows of the data frame, we can use:
+
+```{r}
+slice_head(iris, n = 2)
+```
+
+We can also subset to a proportion of rows with the argument `prop = [proportion of rows]`. For example, to subset the data to just the last 5 percent of rows we would write:
+
+```{r}
+slice_tail(iris, prop = 0.05)
+```
+
+We can even slice the data to the row associated with maximum value of a variable:
+
+```{r}
+slice_max(iris, order_by = sepal_length)
+```
+
+... or the minimum value of a variable:
+
+```{r}
+slice_min(iris, order_by = sepal_length)
+```
+
+... or even the 5 rows with that contain the smallest values of a variable:
+
+```{r}
+slice_min(
+  iris, 
+  n = 5,
+  order_by = sepal_length)
+```
+
+### Ordering
+
+You may have noticed when we ran `slice_min()` and `slice_max()` that the tibbles were ordered by the values in the specified columns (thus `order_by =`). Ordering a data frame is a great way to explore the values therein and look for potential problems.
+
+We can order an entire table by a variable"s value using `arrange()`:
+
+```{r}
+arrange(iris, sepal_length)
+```
+
+This arranged the table from shortest to longest sepal length values. If we want to order the table from the largest to smallest sepal lengths, we nest the function `desc()` inside of the arrange function:
+
+```{r}
+arrange(
+  iris, 
+  desc(sepal_length))
+```
+
+For character values, `arrange()` will sort the table alphabetically:
+
+```{r}
+arrange(
+  my_tibble,
+  role)
+```
+
+```{r}
+arrange(
+  my_tibble,
+  desc(role))
+```
+
+### Characters and factors
+
+It is often necessary to know the unique values present in a set of characters or factors.
+
+If a column is a character of factor vector, we can determine the unique values using, appropriately, the function `unique()`:
+
+```{r}
+unique(iris$species)
+```
+
+This returned a character vector that only contained the unique values in `iris$species`.
+
+If the column is a factor, this information can also be extracted using the function `levels()`:
+
+```{r}
+levels(iris$species)
+```
+
+If we want to see the number of records associated with a unique character value, we can use the function `table()`:
+
+```{r}
+table(iris$species)
+```
+
+The variable `iris$species` is a factor, but this also works on a character vector:
+
+```{r}
+table(
+  as.character(iris$species))
+```
+
+In the above, we are given a *very* handy printout of the distribution of the data.
+
+### Statistical summaries
+
+When reading in data, it is often useful to look at the summary statistics for the dataset. This can help you find any errors (e.g., potential outliers or NA values). To do so, a good place to start is the function `summary()`:
+
+```{r}
+summary(iris)
+```
+
+*Note: But see what happens when you run* `summary(my_tibble)` *... the printed summary information for character values isn"t particularly useful!*
+
+You can also look at summary statistics individually. This can be especially useful programmatically. I won"t bore you with a lot of text to describe each one, but here"s a few to try on your own (*see* `?[function_name]` *if you have any questions about what each does!*):
+
+```{r, eval = FALSE}
+min(iris$sepal_length)
+
+max(iris$sepal_length)
+
+mean(iris$sepal_length)
+
+median(iris$sepal_length)
+
+var(iris$sepal_length)
+
+sd(iris$sepal_length)
+```
+
+### A bad habit
+
+There is one early exploration step that is commonly used that I *do not recommend* ... the function `view()`. This function allows you to view your data as though it were a spreadsheet. Here"s how it is applied (I have not run it here, but you *may* run it on your own).
+
+```{r, eval = FALSE}
+view(iris)
+```
+
+Invariably, you"re going to use this function anyways and when I see you do it during our help sessions I will invariably complain -- I might even emit a high-pitched whiny squeel. The student response to my whining is usually something like "... but I like to see my data."
+
+Here"s the deal: You get very little information by looking directly at the data. There is no indication of column classes, no indication of the number of rows (without scrolling), it is nearly impossible to spot bad character or factor values, and there is little opportunity to explore numeric values (other than ordering). When the data get large, any utility of this tool quickly falls away. It is better to get in the practice of properly exploring the data. As such ...
+
+::: mysecret
+<i class="fas fa-user-secret" style="font-size:36px"></i>   [For God"s sake, don"t use `view()`!]{style="font-size: 20px"}
+:::
+
+## Writing data
+
+Our final topic of this section is how to write data to a file. This is quite straightforward, so this section will (actually) be brief for once. To reduce clutter in your data folder, we will remove each file after writing.
+
+### Atomic vectors
+
+There are two preferred ways to write an atomic vector to a file: as a *.txt* file or as an *.RDS* file.
+
+If you intend to share your vector outside of program R, saving the vector as a text file is a great way to do it. To do so, use the `write_lines()` function. The first argument of the function is the data to write and the second argument is the relative file path:
+
+```{r}
+write_lines(four_instruments, file = "data/raw/temp.txt")
+```
+
+We can use the `list.files()` function to see if the file was written:
+
+```{r}
+list.files("data/raw", pattern = "txt")
+```
+
+... and *really* check to see if it worked by reading the data back in:
+
+```{r}
+read_lines("data/raw/temp.txt")
+```
+
+We will remove this file with `file.remove()`:
+
+```{r}
+file.remove("data/raw/temp.txt")
+```
+
+... and check to see if we successfully removed the file:
+
+```{r}
+list.files("data/raw", pattern = "txt")
+```
+
+If you do not intend to use or share the data outside of R, your best bet is to save the data as an *.RDS* file. For this, we use the function `write_rds()`. Again, the first argument of the function is the data to write and the second argument is the relative file path:
+
+```{r}
+# Write four instruments to file:
+
+write_rds(four_instruments, file = "data/raw/temp.rds")
+
+# Did it work?
+
+read_rds("data/raw/temp.rds")
+
+# Yup, remove it!
+
+file.remove("data/raw/temp.rds")
+```
+
+::: mysecret
+<i class="fas fa-user-secret" style="font-size:36px"></i>   [When should I write a file as an RDS?]{style="font-size: 20px"}
+
+Reading and writing *.RDS* files is super straightforward in R. As stated previously, you maintain all of the attributes of the data and, frankly, little thought has to be given about the structure of the object. If you"re happy with it is current structure, you"re good to go. That being said, **do not** write the file as an *.RDS* if:
+
+-   You intend to share the file with a non-R-user
+-   You plan to work with the file outside of R (hopefully, that won"t be the case)
+-   The file is too big to fit in your memory (in such cases, R only maintains a pointer to a temporary file stored on your hard drive)
+:::
+
+### Lists
+
+The **only** way that I save lists is as an *.RDS* file! Let"s make a list:
+
+```{r}
+my_list <-
+  list(
+    band = my_tibble,
+    instruments = four_instruments)
+```
+
+... save it as an *.RDS* file:
+
+```{r}
+write_rds(my_list, "data/raw/temp.rds")
+```
+
+... check to see if it worked:
+
+```{r}
+read_rds("data/raw/temp.rds")
+```
+
+... and remove the file:
+
+```{r}
+file.remove("data/raw/temp.rds")
+```
+
+I should note that you can use R to write a list as an Excel file (each list item is written to a separate worksheet). I do not recommend doing so, but the package `xlsx` has tools to accomplish this inadvisable task!
+
+### Data frames
+
+The last kind of data We will write is a tibble. There are three options for doing so:
+
+-   `write.csv`: Base R version (**do not use!**)
+-   `write_csv`: readr version (use this!)
+-   `write_rds`: As above, handy if you don"t intend to share the file with a non-R-user!
+
+Let"s start with `write.csv()`. Again, we supply the dataset and a path to the file:
+
+```{r}
+write.csv(my_tibble, file = "data/raw/temp.csv")
+```
+
+... let"s see what the above returned:
+
+```{r}
+read_csv("data/raw/temp.csv")
+```
+
+We can see that this returned an additional column with (rarely useful) row numbers! We can modify this with an argument (`row.names = FALSE`), but there"s a better way ...
+
+Use `write_csv()`:
+
+```{r}
+write_csv(my_tibble, file = "data/raw/temp.csv")
+```
+
+... see what the above returned:
+
+```{r}
+read_csv("data/raw/temp.csv")
+```
+
+It is great! Let"s delete the file:
+
+```{r}
+file.remove("data/raw/temp.csv")
+```
+
+As above, we could have also written the file using `write_rds()` (but see caveats):
+
+```{r}
+# Write as an rds file:
+
+write_rds(my_tibble, "data/raw/temp.rds")
+
+# Check to see if it worked:
+
+read_rds("data/raw/temp.rds")
+
+# Remove the file:
+
+file.remove("data/raw/temp.rds")
+```
+
+### A final note
+
+It is important to consider when a file should be written to your hard drive. Despite the number of files We will use in this course, I write files very rarely. Instead, once I get a raw data file, I generate a script for pre-processing the data and various wrangling steps. Rather than save the processed data, I save and run the script that executes the data processing. The only exception to this is when I work with *very* large files -- files for which the pre-processing script takes a long time to execute (\> 30 seconds or so). Using this method helps avoid storing multiple versions of the same file and thus improves your organization and workflow.
+
+## Reference material
+
+Below is some handy reference material for content covered in this lesson.
+
+### Glossary of terms
+
+-   **Assignment** (*noun*): A reference point in your global environment that R can use to retrieve an object located within your computer's memory.
+-   **Assignment** (*verb*): The act of assigning a reference (also called a name, key, binding, or assignment) to your global environment that R can use to retrieve an object located within your computer's memory.
+-   **Code section**: A portion of a script that is delineated by a section header (Windows: Ctrl + Shift + R; Mac: Command + Shift + R)
+-   **Core package**: A package that is loaded when its parent metapackage is loaded.
+-   **Garbage collection**: The process by which R frees up memory by deleting objects that are not named in the global environment
+-   **Global Environment**: The location where object names are stored locally during the current session
+-   **List item**: Individual values or component objects of a list.
+-   **Menu bar**: The bar at the top of the RStudio window
+-   **Pane**: The RStudio window is divided into four sections, called panes
+-   **Relative file path**: The path to a file relative to the working directory
+-   **Session**: Everything you do in RStudio in a single sitting
+-   **Tab**: Each pane has a tab on the top of it. For example, I will often refer to the Environment or History tabs of the workspace pane.
+-   **Working directory**: The location on your computer's operating system where R will attempt to read or write files
+
+### R Studio panes
+
+Throughout this class, I will refer to the panes (sections) of the R Studio window. This graphic should help you remember them:
+
+<img src="images/rstudio_panes.png" style="max-width: 100%; height: auto; padding-top: 20px; padding-bottom: 20px"/></img>
+
+### Keyboard shortcuts
+
+The Keyboard shortcuts we will use in this lesson are listed below for Windows and Mac operating systems.
+
+::: mysecret
+<i class="fas fa-user-secret" style="font-size:36px"></i>   I strongly suggest using a keyboard shortcut whenever possible. It can be hard to do at first, using your mouse to click a button or typing a few characters is initially **way** easier than remembering the keyboard shortcut. If you force yourself to do it though, you won"t regret it -- it saves a lot of time in the end.
+:::
+
+| Task                        |       Windows       |         Mac          |
+|:----------------------------|:-------------------:|:--------------------:|
+| Create a new script         | Control + Shift + N | Command + Shift + N  |
+| View all keyboard shortcuts |   Ctrl + Alt + K    | Command + Option + K |
+| Execute code                |    Ctrl + Enter     |   Command + Enter    |
+| Add an assignment operator  |     Alt + Dash      |    Option + Dash     |
+| Save script file            |     Control + S     |     Command + S      |
+| Copy                        |     Control + C     |     Command + C      |
+| Paste                       |     Control + V     |     Command + V      |
+
+: Keyboard shortcuts {.striped .hover}
+
+### Functions used in this lesson
+
+#### Base R functions:
+
+-   `c`
+-   `data.frame`
+-   `dim`
+-   `file.remove`
+-   length
+-   levels
+-   library
+-   list
+-   list.files
+-   ls
+-   max
+-   mean
+-   median
+-   min
+-   nrow
+-   ncol
+-   read.csv (do not use!)
+-   rm
+-   sd
+-   setwd (do not use!)
+-   str
+-   summary
+-   table
+-   unique
+-   var
+-   view (do not use!)
+-   write.csv (do not use!)
+
+#### Tidyverse
+
+We used the *tidyverse* packages *dplyr*, *readr*, and *tibble* in this lesson. Each of these packages are members of the **core tidyverse** *--* that means that the packages are loaded, by default, with `library(tidyverse)`.
+
+-   dplyr::arrange
+-   dplyr::desc
+-   dplyr::bind_cols
+-   dplyr::slice_head
+-   dplyr::slice_max
+-   dplyr::slice_min
+-   dplyr::slice_tail
+-   readr::read_csv
+-   readr::read_lines
+-   readr::read_rds
+-   readr::write_csv
+-   readr::write_lines
+-   readr::write_rds
+-   readxl::excel_sheets
+-   readxl::read_excel
+-   tibble::tibble
+-   tibble::tribble

@@ -1,0 +1,18 @@
+## Module overview {.unnumbered}
+
+![](hex_complex.png){.intro_image}
+
+Welcome to **Managing Ecological Data in R: Introduction to Data Science and the Art of Wrangling for Ecologists**! In this course, we will explore the management of ecological data using Program R. You will gain an in-depth understanding of how to apply the [tidyverse](https://www.tidyverse.org/packages/){target="_blank"} to efficiently wrangle ecological data. We will focus on the structure and linguistics of data in R, how to integrate R into a modern data science workflow, and explore how to think about ecological data in new ways.
+
+In this module, we will cover the basic concepts and primary tools that we will use in this course. We will quickly build on the content herein, so please be sure to read/view all content in the order that it appears.
+
+This module is divided into eight sections:
+
+1.  **Course introduction**: A general introduction to the content of this course, where to find course resources, and how to navigate course content.
+2.  **Before you begin**: This section provides [*necessary*]{style="color:red;"} steps that you must take *prior* to completing the content of this module. You will set your global options for this course and learn what I mean by "*please ensure that you are working in a clean session*" (you will hear me say this a lot).
+3.  **Objects**: In this lesson, we will review functions and how to create and describe the most common data objects that we will use in this course (atomic vectors, lists, and data frames).
+4.  **Importing and exporting data**: Here, we will review how to import and export in [.csv]{.mono} and [.rds]{.mono} files, you will learn how to read in [.xlsx]{.mono} files, and I will describe exploratory steps that should be taken *every time* you read in a file.
+5.  **Assignment**: In this lesson, we'll review global (and "local") assignments, you'll learn the benefits and pitfalls of global assignments. Along the way, you learn how to use base R's pipe operator and I will provide recommendations to improve your R workflow and manage your global environment.
+6.  **Core *dplyr* verbs and when to use them**: We will break new ground with this lesson as we learn how and when to use the primary *dplyr* functions for manipulating data frames. Functions covered include `mutate()`, `select()`, `filter()`, `summarize()`, and `arrange()`.
+7.  **Introduction to data visualization**: We will be visualizing data a lot throughout this course. This lesson introduces you to *ggplot2*, the package we will use for visualizing data. I will introduce some of the underlying theory behind the Grammar of Graphics, apply this theory to a few plots, and you will learn how to make simple plots.
+8.  **Course style guide**: Modern standards in R coding compel us to generate code that consistent, parsimonious, and communicable. This lesson provides the set of code formatting rules that I ask you to follow in the course. The provided rules are closely aligned with the [tidyverse style guide](https://style.tidyverse.org/){target="_blank"}.

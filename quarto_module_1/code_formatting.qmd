@@ -1,0 +1,1229 @@
+# Course style guide
+
+```{r setup, include=FALSE}
+library(tidyverse)
+
+knitr::opts_chunk$set(echo = TRUE,
+                      eval = FALSE)
+```
+
+![](hex_complex.png){.intro_image}
+
+This document represents a style guide for the script files in our course and is intended to help you develop a consistent syntax for creating communicable, readable code. Well-formatted code is not just an end product though -- recommendations in this document will help you explore and debug your code *as you write it*. Moreover, a portion of your grade will be based on adhering to this style guide (up to 10% per problem set)!
+
+Herein, I borrow heavily from the [tidyverse style guide](https://style.tidyverse.org/){target="_blank"}, from which most of the formatting rules below were derived. I include only elements from the tidyverse style guide that are relevant to the content in this course and have included additional or modified elements that, in my opinion, provide added utility or enhanced code readability. Recommendations that vary between this document and the tidyverse style guide are annotated with a superscript &dagger; symbol and are described, on a case-by-case basis, in section 8.2, *Style guide explained*.
+
+*Note: Style guides, such as this one, are common across many computer languages and organizations. Although "style" represents a preference (i.e., it does not influence code output), using a style guide does make collaboration easier!*
+
+This lesson is divided into three sections:
+
+<ul>
+<li>**8.1 Style guide, in brief**: This section provides the code formatting rules that we will follow in this course. I suggest returning to this *often* and comparing your problem set answers with this guide prior to submission.</li>
+<li>**8.2 Style guide, in-depth**: Here I provide a description of the code formatting rules, why they are helpful, and examples of each.</li>
+<li>**8.3 Exploring these rules**: We will end with an R script and video where we reformat poorly formatted code together.</li>
+</ul>
+
+## Style guide, in brief
+
+### Operators
+
+* **Assignment** (`<-`, `=`):
+  * Always use the `<-` operator for global assignment.
+  * Separate assignment operators from surrounding code with *one* leading *and* trailing space. *Exception*: You can add more than one space before the `=` operator if it improves code block alignment.
+  * Place no more than *one* assignment operator (`=` or `<-`) per line of code^&dagger;^.
+  * Assigned names should  be written in snake_case.
+* **Pipe operators** (`|>`):
+  * Include *one* leading space before pipe operators.
+  * Code that follows a pipe operator should be placed on a new line^&dagger;^.
+  * Piped code should be indented *two* spaces (one tab stop) relative to the first step of the chain.
+* **Arithmetic** (e.g., `+`, `*`, `/`) and **logical operators** (e.g., `==`, `!=`, `%in%`) should be separated from the adjacent code with *one* leading and trailing space. *Exception*: Negation (`!`) operators should *not* be separated from adjacent code.
+* **Parentheses** (`(...)`)^&dagger;^, **extraction** (`[]`, `[[]]`, `$`), and **colon operators** (`:`, `::`) should *not* be preceded or followed by a space.
+* **Formula operators** (`~`):
+  * Include *one* leading *and* trailing space for two-sided formulas.
+  * Do *not* include a trailing space if `~` is used in a single-sided formula with a single identifier.
+  * *Do* include a trailing space if `~` is followed by function (including operators).
+  
+### Code blocks and comments:
+
+* Maintain *one* blank line between code blocks^&dagger;^. *Exception*: Do not separate adjacent `library()` functions with a blank line.
+* Maintain *one* blank line between code blocks and comments^&dagger;^.
+* **Hashtags** (`#`) should be separated from comment text by *one* trailing space.
+* Code should *not* exceed 80 characters in width (if it is avoidable). 
+* Include no more than *one* named function per line of code (i.e., operators are okay)^&dagger;^. *Exception*: Nested functions where the inner function is the combine function (`c()`) or functions used to calculate summary statistics of a data object (e.g., `mean()`, `n()`, and `length()`).
+* **Nested functions** should not be nested deeper than two levels (use a pipe instead!)^&dagger;^ and each level should be indented *two* spaces (one tab stop) relative to the parent function.
+
+### Arguments in a function
+
+* If you provide three or more arguments to a named function, place each argument on its own line^&dagger;^. *Exception*: When using the `c()` or `list()` functions, you may include up to five numeric values.
+* **Logicals**: Spell out `TRUE` and `FALSE` in a function's argument.
+* If you modify the default behavior of a function's argument, include the name of the argument.
+* **Character values**: Use double-quotes (`"example"`) when creating character vectors.
+* **Commas** should be followed by *one* trailing space, but *not* a leading space. *Exception*: More than one space *can* be added after a comma if it improves the alignment within a code block.
+
+## Style guide, in-depth
+
+### Operators
+
+:::{class=indent_bb}
+[&#9679;]{class=bulls} **Assignment** (`<-`, `=`):
+:::
+
+:::{class=indent_wb}
+[&cir;]{class=bulls} Always use the `<-` operator for global assignment.
+:::
+
+:::{class=indent_code_wb}
+[Bad:]{class=bad}
+
+```{r}
+my_vector = c(1, 2)
+```
+
+[Good:]{class=good}
+
+```{r}
+my_vector <- c(1, 2)
+```
+:::
+
+:::{class=indent_wb}
+[&cir;]{class=bulls} Separate assignment operators from surrounding code with *one* leading *and* trailing space.
+:::
+
+:::{class=indent_code_wb}
+[Bad:]{class=bad}
+
+```{r}
+sayings<-
+  tibble(
+    country=c("boy", "howdy"),
+    nerdy =c("hello", "world"),
+    formal= c("warm", "wishes"))
+```
+
+[Good:]{class=good}
+
+```{r}
+sayings <-
+  tibble(
+    country = c("boy", "howdy"),
+    nerdy = c("hello", "world"),
+    formal = c("warm", "wishes"))
+```
+
+**Exception**: You can add more than one space before the `=` operator if it improves code block alignment.
+
+```{r}
+sayings <-
+  tibble(
+    country = c("boy", "howdy"),
+    nerdy   = c("hello", "world"),
+    formal  = c("warm", "wishes"))
+```
+
+:::
+
+:::{class=indent_wb}
+[&cir;]{class=bulls} Place no more than *one* assignment operator (`=` or `<-`) per line of code^&dagger;^.
+:::
+
+:::{class=indent_code_wb}
+[Bad:]{class=bad}
+
+```{r}
+greetings <- rep(c("hello world"), times = 2)
+```
+
+[Good:]{class=good}
+
+```{r}
+greetings <- 
+  rep(c("hello world"), times = 2)
+```
+:::
+
+:::{class=indent_wb}
+[&cir;]{class=bulls} Assigned names should be written in snake_case.
+:::
+
+:::{class=indent_code_wb}
+[Bad:]{class=bad}
+
+```{r}
+my.phrases <-
+  tribble(
+    ~boyHowdy, ~HelloWorld,
+    1, 2)
+```
+
+[Good:]{class=good}
+
+```{r}
+my_phrases <-
+  tribble(
+    ~boy_howdy, ~hello_world,
+    1, 2)
+```
+:::
+
+:::{class=indent_bb}
+[&#9679;]{class=bulls}  **Pipe operators** (`|>`):
+:::
+
+:::{class=indent_wb}
+[&cir;]{class=bulls} Include *one* leading space before pipe operators.
+:::
+
+:::{class=indent_code_wb}
+[Bad:]{class=bad}
+
+```{r}
+c(1, 2)|>
+  mean()
+```
+
+[Good:]{class=good}
+
+```{r}
+c(1, 2) |>
+  mean()
+```
+:::
+
+:::{class=indent_wb}
+[&cir;]{class=bulls} Code that follows a pipe operator should be placed on a new line^&dagger;^.
+:::
+
+:::{class=indent_code_wb}
+[Bad:]{class=bad}
+
+```{r}
+c(1, 2) |> mean()
+```
+
+[Good:]{class=good}
+
+```{r}
+c(1, 2) |>
+  mean()
+```
+:::
+
+:::{class=indent_wb}
+[&cir;]{class=bulls} Piped code and comments should be indented *two* spaces (one tab stop) relative to the first step of the chained process.
+:::
+  
+:::{class=indent_code_wb}
+[Bad:]{class=bad}
+
+```{r}
+c(1, 2) |>
+mean()
+
+c(1, 2) |>
+  
+# Calculate mean:
+  
+  mean()
+```
+
+[Good:]{class=good}
+
+```{r}
+c(1, 2) |>
+  mean()
+
+c(1, 2) |>
+  
+  # Calculate mean:
+  
+  mean()
+```
+:::
+
+:::{class=indent_bb}
+[&#9679;]{class=bulls} **Arithmetic** (e.g., `+`, `*`, `/`) and **logical operators** (e.g., `==`, `!=`, `%in%`) should be separated from the adjacent code with *one* leading and trailing space.
+:::
+
+:::{class=indent_code_bb}
+[Bad:]{class=bad}
+
+```{r}
+1/2
+1+ 2
+1 ==2
+```
+
+[Good:]{class=good}
+
+```{r}
+1 / 2
+1 + 2
+1 == 2
+```
+
+**Exception**: Negation (`!`) operators should *not* be separated from adjacent code.
+
+```{r}
+!1 == 2
+```
+:::
+
+:::{class=indent_bb}
+[&#9679;]{class=bulls} **Parentheses** (`(...)`)^&dagger;^, **extraction** (`[]`, `[[]]`, `$`), and **colon operators** (`:`, `::`) should *not* be preceded or followed by a space.
+:::
+
+:::{class=indent_code_bb}
+[Bad:]{class=bad}
+
+```{r}
+c (1, 2)
+
+sayings[1, 2 ]
+
+sayings$ nerdy
+```
+
+[Good:]{class=good}
+
+```{r}
+c(1, 2)
+
+sayings[1, 2]
+
+sayings$nerdy
+```
+
+:::
+
+
+:::{class=indent_bb}
+[&#9679;]{class=bulls} **Formula operators** (`~`):
+:::
+
+:::{class=indent_wb}
+[&cir;]{class=bulls} Include *one* leading *and* trailing space for two-sided formulas.
+:::
+
+:::{class=indent_code_wb}
+[Bad:]{class=bad}
+
+```{r}
+
+```
+
+[Good:]{class=good}
+
+```{r}
+
+```
+:::
+
+:::{class=indent_wb}
+[&cir;]{class=bulls} Do *not* include a trailing space if `~` is used in a single-sided formula with a single identifier.
+:::
+
+:::{class=indent_code_wb}
+[Bad:]{class=bad}
+
+```{r}
+
+```
+
+[Good:]{class=good}
+
+```{r}
+
+```
+:::
+
+:::{class=indent_wb}
+[&cir;]{class=bulls} *Do* include a trailing space if `~` is followed by function (including operators).
+:::
+
+:::{class=indent_code_wb}
+[Bad:]{class=bad}
+
+```{r}
+
+```
+
+[Good:]{class=good}
+
+```{r}
+
+```
+:::
+  
+### Code blocks and comments:
+
+:::{class=indent_bb}
+[&#9679;]{class=bulls} Maintain *one* blank line between code blocks^&dagger;^. 
+:::
+
+:::{class=indent_code_bb}
+[Bad:]{class=bad}
+
+```{r}
+c(1, 2)
+list(1, 2)
+```
+
+[Good:]{class=good}
+
+```{r}
+c(1, 2)
+
+list(1, 2)
+```
+
+**Exception**: Do not separate adjacent `library()` functions with a blank line.
+
+```{r}
+library(lobstr)
+library(tidyverse)
+```
+:::
+
+:::{class=indent_bb}
+[&#9679;]{class=bulls} Maintain *one* blank line between code blocks and comments^&dagger;^.
+:::
+
+:::{class=indent_code_bb}
+[Bad:]{class=bad}
+
+```{r}
+# A poorly placed section header -----------------------------
+# My atomic vector:
+c(1, 2)
+# My list:
+
+list(1, 2)
+```
+
+[Good:]{class=good}
+
+```{r}
+# A well-placed section header --------------------------------
+
+# My atomic vector:
+
+c(1, 2)
+
+# My list:
+
+list(1, 2)
+```
+:::
+
+:::{class=indent_bb}
+[&#9679;]{class=bulls} **Hashtags** (`#`) should be separated from comment text by *one* trailing space.
+:::
+
+:::{class=indent_code_bb}
+[Bad:]{class=bad}
+
+```{r}
+#A well-placed section header ---------------------------------
+
+#My atomic vector:
+```
+
+[Good:]{class=good}
+
+```{r}
+# A well-placed section header --------------------------------
+
+# My atomic vector:
+```
+:::
+
+:::{class=indent_bb}
+[&#9679;]{class=bulls} Code should *not* exceed 80 characters in width (if it is avoidable). 
+:::
+
+:::{class=indent_code_bb}
+[Bad:]{class=bad}
+
+```{r}
+brood_x_cicadas <- c("Magicicada cassini", "Magicicada septendecim", "Magicicada septendecula")
+```
+
+[Good:]{class=good}
+
+```{r}
+brood_x_cicadas <- 
+  c("Magicicada cassini", "Magicicada septendecim", "Magicicada septendecula")
+
+# Or (even better):
+
+brood_x_cicadas <- 
+  c("Magicicada cassini",
+    "Magicicada septendecim", 
+    "Magicicada septendecula")
+```
+:::
+
+:::{class=indent_bb}
+[&#9679;]{class=bulls} Include no more than *one* named function per line of code (i.e., operators are okay)^&dagger;^.
+:::
+
+:::{class=indent_code_bb}
+[Bad:]{class=bad}
+
+```{r}
+
+```
+
+[Good:]{class=good}
+
+```{r}
+
+```
+
+**Exception**: Nested primitive functions (e.g., `c()`, `list()`, and `rep()`) and those used to calculate summary statistics of a data object (e.g., `mean()`, `n()`, and `length()`).
+
+```{r}
+
+```
+:::
+
+:::{class=indent_bb}
+[&#9679;]{class=bulls} **Nested functions** should not be nested deeper than two levels (use a pipe instead!)^&dagger;^ and each level should be indented *two* spaces (one tab stop) relative to the parent function.
+:::
+
+:::{class=indent_code_bb}
+[Bad:]{class=bad}
+
+```{r}
+
+```
+
+[Good:]{class=good}
+
+```{r}
+
+```
+:::
+
+### Arguments in a function
+
+:::{class=indent_bb}
+[&#9679;]{class=bulls} If you provide four or more arguments to a named function, place each argument on its own line^&dagger;^.
+:::
+
+:::{class=indent_code_bb}
+[Bad:]{class=bad}
+
+```{r}
+
+```
+
+[Good:]{class=good}
+
+```{r}
+
+```
+
+**Exception**: When using the `c()` or `list()` functions, you may include up to five numeric values.
+
+```{r}
+
+```
+:::
+
+:::{class=indent_bb}
+[&#9679;]{class=bulls} **Logicals**: Spell out `TRUE` and `FALSE` in a function's argument.
+:::
+
+:::{class=indent_code_bb}
+[Bad:]{class=bad}
+
+```{r}
+
+```
+
+[Good:]{class=good}
+
+```{r}
+
+```
+:::
+
+:::{class=indent_bb}
+[&#9679;]{class=bulls} If you modify the default behavior of a function's argument, include the name of the argument.
+:::
+
+:::{class=indent_code_bb}
+[Bad:]{class=bad}
+
+```{r}
+
+```
+
+[Good:]{class=good}
+
+```{r}
+
+```
+:::
+
+:::{class=indent_bb}
+[&#9679;]{class=bulls} **Character values**: Use double-quotes (`"example"`) when creating character vectors.
+:::
+
+:::{class=indent_code_bb}
+[Bad:]{class=bad}
+
+```{r}
+
+```
+
+[Good:]{class=good}
+
+```{r}
+
+```
+:::
+
+:::{class=indent_bb}
+[&#9679;]{class=bulls} **Commas** should be followed by *one* trailing space, but *not* a leading space.
+:::
+
+:::{class=indent_code_bb}
+[Bad:]{class=bad}
+
+```{r}
+
+```
+
+[Good:]{class=good}
+
+```{r}
+
+```
+
+**Exception**: More than one space *can* be added after a comma if it improves the alignment within a code block.
+
+```{r}
+
+```
+:::
+
+### Whitespace
+
+:::{class=indent_code_wb}
+[Bad:]{class=bad}
+
+```{r, eval = FALSE}
+c(1, 2)
+list(1, 2)
+```
+
+[Good:]{class=good}
+
+```{r, eval = FALSE}
+c(1, 2)
+
+list(1, 2)
+```
+
+**Exception**: The `library()` function: Because it is rarely necessary run or debug a single library loading task!
+
+```{r, eval = FALSE}
+library(lobstr)
+library(tidyverse)
+```
+
+:::
+
+:::{class=indent_wb}
+[&cir;]{class=bulls} Code blocks and comments (including section headers)^&dagger;^: This helps differentiate between code and comments.
+:::
+
+:::{class=indent_code_wb}
+
+[Bad:]{class=bad}
+
+```{r, eval = FALSE}
+# My atomic vector:
+c(1, 2)
+# My list:
+
+list(1, 2)
+```
+
+[Good:]{class=good}
+
+```{r, eval = FALSE}
+# My atomic vector:
+
+c(1, 2)
+
+# My list:
+
+list(1, 2)
+```
+
+:::
+
+
+:::{class=indent_wb}
+[&cir;]{class=bulls} Comments and section header comments^&dagger;^: This helps section headers stand out.
+:::
+
+:::{class=indent_code_wb}
+
+[Bad:]{class=bad}
+
+```{r, eval = FALSE}
+# My objects ----------------------------------------------
+# My atomic vector:
+
+c(1, 2)
+```
+
+[Good:]{class=good}
+
+```{r, eval = FALSE}
+# My objects ----------------------------------------------
+
+# My atomic vector:
+
+c(1, 2)
+```
+
+:::
+
+:::{class=indent_bb}
+*^&dagger;^ The tidyverse style guide gives no recommendations for vertical whitespace in code. I believe that vertical spacing rules defined here really helps differentiate between steps and generate much more readable code.*
+:::
+
+:::{class=indent_bb}
+[&#9679;]{class=bulls} **Horizontal whitespace**:
+:::
+
+:::{class=indent_wb}
+[&cir;]{class=bulls} Include a leading *and* trailing space for all assignment, arithmetic, and logical operators
+:::
+
+:::{class=indent_code_wb}
+
+[Bad:]{class=bad}
+
+```{r, eval = FALSE}
+my_vector<-c(1, 2)
+
+my_vector<- c(1, 2)
+
+my_vector <-c(1, 2)
+
+my_vector +1
+
+my_vector+ 1
+```
+
+[Good:]{class=good}
+
+```{r, eval = FALSE}
+my_vector <- c(1, 2) + 1
+
+my_vector + 1
+```
+
+**Exception**: More than one space can be added before the `=` assignment operator if it improves alignment:
+
+```{r, eval = FALSE}
+tribble(
+  boy   = "hello",
+  howdy = "world" )
+```
+
+:::
+
+:::{class=indent_wb}
+[&cir;]{class=bulls} Include a (single) leading space for pipe operators ([|>]{class=mono}).
+:::
+
+:::{class=indent_code_wb}
+
+[Bad:]{class=bad}
+
+```{r, eval = FALSE}
+my_vector|>
+  mean()
+```
+
+[Good:]{class=good}
+
+```{r, eval = FALSE}
+my_vector |>
+  mean()
+```
+:::
+
+:::{class=indent_wb}
+[&cir;]{class=bulls} For multi-line code blocks, indent two spaces (a tab stop) relative to the parent object or process:
+:::
+
+:::{class=indent_code_wb}
+
+[Bad:]{class=bad}
+
+```{r, eval = FALSE}
+my_vector |>
+mean()
+
+mean(
+    c(1, 1, 2),
+na.rm = TRUE)
+
+list("guitar",
+     "bass",
+     "drums")
+```
+
+[Good:]{class=good}
+
+```{r, eval = FALSE}
+my_vector |>
+  mean()
+
+mean(
+  c(1, 1, 2),
+  na.rm = TRUE)
+
+list(
+  "guitar",
+  "bass",
+  "drums")
+```
+:::
+
+:::{class=indent_wb}
+[&cir;]{class=bulls} Include a (single) trailing, but *not* a leading space for:
+:::
+
+:::{class=indent_sb}
+[&#9632;]{class=bulls} Commas: Spacing should be equivalent to the spacing used in regular English writing.
+:::
+
+:::{class=indent_code_sb}
+
+[Bad:]{class=bad}
+
+```{r, eval = FALSE}
+c(1,2)
+
+c(1 ,2)
+
+c(1 , 2)
+```
+
+[Good:]{class=good}
+
+```{r, eval = FALSE}
+c(1, 2)
+```
+
+**Exception**: More than one space can be added after a comma if it improves alignment:
+
+```{r, eval = FALSE}
+tribble(
+  ~ a,     ~ b,
+  "hello", "world")
+```
+
+:::
+
+:::{class=indent_sb}
+[&#9632;]{class=bulls} The formula operator (`~`)^&dagger;^
+:::
+
+:::{class=indent_code_sb}
+
+[Bad:]{class=bad}
+
+```{r, eval = FALSE}
+my_tibble <- 
+  tribble(
+    ~boy, ~howdy,
+    1, 2)
+```
+
+[Good:]{class=good}
+
+```{r, eval = FALSE}
+my_tibble <- 
+  tribble(
+    ~ boy, ~ howdy,
+    1, 2)
+```
+
+*^&dagger;^ The tidyverse style guide recommends that "single-sided formulas when the right-hand side is a single identifier" should not be followed by a trailing space. I have removed this requirement simply because examples of more complex right-hand identifiers will not be addressed until Module 5. No code formatting penalty will be enforced when the tidyverse style conditions are met.*
+
+:::
+
+:::{class=indent_sb}
+[&#9632;]{class=bulls} Hash tags and comment text (including section headers)
+:::
+
+:::{class=indent_code_sb}
+
+[Bad:]{class=bad}
+
+```{r, eval = FALSE}
+#My objects ----------------------------------------------
+
+# My atomic vector:
+
+c(1, 2)
+
+#My list:
+
+list(1, 2)
+```
+
+[Good:]{class=good}
+
+```{r, eval = FALSE}
+# My objects ----------------------------------------------
+
+# My atomic vector:
+
+c(1, 2)
+
+# My list:
+
+list(1, 2)
+```
+:::
+
+:::{class=indent_wb}
+[&cir;]{class=bulls} *Do not* include a leading or trailing space between:
+:::
+
+:::{class=indent_sb}
+[&#9632;]{class=bulls} Parentheses^&dagger;^ or square bracket operators and adjacent code
+:::
+
+:::{class=indent_code_sb}
+
+[Bad:]{class=bad}
+
+```{r, eval = FALSE}
+my_vector <- c (1, 2)
+
+my_vector <- c( 1, 2)
+
+my_vector <- c(1, 2 )
+
+my_vector [1]
+
+my_vector[ 1]
+```
+
+[Good:]{class=good}
+
+```{r, eval = FALSE}
+my_vector <- c(1, 2)
+
+my_vector[1]
+```
+
+*^&dagger;^ The tidyverse style guide recommends including a space with before the parentheses when using the control flow operators `for ()` and `if ()`. These functions will not be addressed until Module 5, thus I have chosen to simplify this style guide by making the rule universal across course content.*
+:::
+
+:::{class=indent_sb}
+[&#9632;]{class=bulls} The `$` operator
+:::
+
+:::{class=indent_code_sb}
+
+[Bad:]{class=bad}
+
+```{r, eval = FALSE}
+my_tibble $howdy
+
+my_tibble$ howdy
+```
+
+[Good:]{class=good}
+
+```{r, eval = FALSE}
+my_tibble$howdy
+```
+:::
+
+### Line breaks
+
+:::{class=indent_bb}
+[&#9679;]{class=bulls} No line of code should exceed 80 characters in width.
+:::
+
+:::{class=indent_code_bb}
+
+[Bad:]{class=bad}
+
+```{r, eval = FALSE}
+brood_x_cicadas <- c("Magicicada cassini", "Magicicada septendecim", "Magicicada septendecula")
+```
+
+[Good:]{class=good}
+
+```{r, eval = FALSE}
+brood_x_cicadas <- 
+  c("Magicicada cassini", "Magicicada septendecim", "Magicicada septendecula")
+
+# Or (even better):
+
+brood_x_cicadas <- 
+  c("Magicicada cassini",
+    "Magicicada septendecim", 
+    "Magicicada septendecula")
+```
+
+**Exception**: Wide lines are sometimes unavoidable with long file paths or URLs:
+
+```{r, eval = FALSE}
+pings <- "https://github.com/kpaxton75/EcolEvol.Manuscript_Optimizing.Trilateration/blob/main/BeepData_Example.rds"
+```
+
+In such cases, just *do the best you can*:
+
+```{r, eval = FALSE}
+pings <- 
+  "https://github.com/kpaxton75/EcolEvol.Manuscript_Optimizing.Trilateration/blob/main/BeepData_Example.rds"
+```
+:::
+
+:::{class=indent_bb}
+[&#9679;]{class=bulls} Place no more than one assignment operator (`=`) or (`<-`) per line of code^&dagger;^.
+:::
+
+:::{class=indent_code_bb}
+
+[Bad:]{class=bad}
+
+```{r}
+greetings <- rep(c("hello world"), times = 2)
+```
+
+[Good:]{class=good}
+
+```{r}
+greetings <- 
+  rep(c("hello world"), times = 2)
+```
+:::
+
+:::{class=indent_bb}
+[&#9679;]{class=bulls} Place `name <-` on its own line if the code block is more than one line.
+:::
+
+:::{class=indent_code_bb}
+
+[Bad:]{class=bad}
+
+```{r, eval = FALSE}
+my_tibble <- tribble(
+  ~ boy, ~ howdy,
+  1, 2)
+```
+
+
+[Good:]{class=good}
+
+```{r, eval = FALSE}
+my_tibble <-
+  tribble(
+    ~ boy, ~ howdy,
+    1, 2)
+```
+:::
+
+
+* If you provide four or more arguments to a named function, place each argument on its own line ^&dagger;^.
+
+:::{class=indent_code_bb}
+
+[Bad:]{class=bad}
+
+```{r, eval = FALSE}
+c("guitar", "bass", "drums", "vocals")
+```
+
+[Good:]{class=good}
+
+```{r, eval = FALSE}
+c("guitar",
+  "bass",
+  "drums",
+  "vocals")
+```
+
+**Exception, `c()` and `list()` with numeric values**: When using the `c()` or `list()` functions, you may include up to *five values* on the same line *if* the values being combined are one to three digit numeric values:
+
+```{r, eval = FALSE}
+c(3, 5, 8, 13, 21)
+```
+
+*^&dagger;^ The tidyverse style guide recommends a limit to the width of a line but does not recommend a criteria for achieving this.*
+:::
+
+* Always spell out `TRUE` and `FALSE`.
+
+:::{class=indent_code_bb}
+
+[Bad:]{class=bad}
+
+```{r, eval = FALSE}
+mean(
+  c(1, 2, NA),
+  na.rm = T)
+```
+
+[Good:]{class=good}
+
+```{r, eval = FALSE}
+mean(
+  c(1, 2, NA),
+  na.rm = TRUE)
+```
+:::
+
+* With **nested functions**, include no more than one *named* function per line (operators are okay)^&dagger;^.
+
+:::{class=indent_code_bb}
+
+[Bad:]{class=bad}
+
+```{r, eval = FALSE}
+mean(c(1, 2))
+```
+
+[Good:]{class=good}
+
+```{r, eval = FALSE}
+mean(
+  c(1, 2, NA),
+  na.rm = TRUE)
+```
+
+**Exception**: If the inner function is used to calculate a summary statistic of the data object (e.g., the functions [mean()]{class=mono}, [n()]{class=mono}, and [length()]{class=mono}):
+
+```{r, eval = FALSE}
+list(1, mean(my_vector))
+
+summarize(my_tibble, n = n())
+```
+:::
+
+* When chaining together functions with a **pipe operator** ([|>]{class=mono}), the chained functions should not occupy the same line of code^&dagger;^.
+
+:::{class=indent_code_bb}
+
+[Bad:]{class=bad}
+
+```{r, eval = FALSE}
+c(1, 2) |> mean()
+
+my_tibble |> summarize(n = n())
+```
+
+[Good:]{class=good}
+
+```{r, eval = FALSE}
+c(1, 2) |> 
+  mean()
+
+my_tibble |> 
+  summarize(n = n())
+```
+
+*^&dagger;^ The tidyverse style guide makes an exception with one-step pipes. I have simplified this to include all piped statements.*
+:::
+
+### Assignments/names
+
+Place no more than one assignment operator (`=`) or (`<-`) per line of code^&dagger;^.
+
+:::{style="margin-left: 1.75em;"}
+
+[Bad:]{class=bad}
+
+```{r, eval = FALSE}
+my_instruments <- c(pete = "guitar")
+
+c(pete = "guitar", john = "bass")
+```
+
+[Good:]{class=good}
+
+```{r, eval = FALSE}
+my_instruments <- 
+  c(pete = "guitar")
+
+c(pete = "guitar", 
+  john = "bass")
+```
+:::
+
+Only use `=` when providing values assigned to the formals of a function -- for assigning to the global environment, use the `<-` assignment operator:
+
+[Bad:]{class=bad}
+
+:::{style="margin-left: 1.75em;"}
+```{r, eval = FALSE}
+my_tibble =
+  tribble(
+    ~ boy, ~ howdy,
+    1, 2)
+```
+:::
+
+[Good:]{class=good}
+
+:::{style="margin-left: 1.75em;"}
+```{r, eval = FALSE}
+my_tibble <-
+  tribble(
+    ~ boy, ~ howdy,
+    1, 2)
+```
+:::
+
+Assigned names should not include a `.`, should be in lowercase, and spaces between words should be separated by a `_` (i.e., *snake_case*).:
+
+:::{style="margin-left: 1.75em;"}
+
+[Bad:]{class=bad}
+
+```{r, eval = FALSE}
+my.phrases <-
+  tribble(
+    ~ boyHowdy, ~ HelloWorld,
+    1, 2)
+```
+
+[Good:]{class=good}
+
+```{r, eval = FALSE}
+my_phrases <-
+  tribble(
+    ~ boy_howdy, ~ hello_world,
+    1, 2)
+```
+:::
+
+## Exploring these rules
+
+In the video below, we will practice aligning a poorly formatted code with this style guide.
+
+**Before you begin**: 
+
+1. Please open RStudio in your course project.
+2. Open the script file `code_formatting_practice.R`.
+3. Hit play!
+
+{{< video https://www.youtube.com/embed/PCPTI0Pw76w?si=4xqDF8XuaJ1pGVF2 >}}

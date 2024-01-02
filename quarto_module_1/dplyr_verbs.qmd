@@ -1,0 +1,21 @@
+# dplyr verbs
+
+An R Studio **session** represents the time spent and operations conducted since opening R (*Note: sessions may be saved and loaded to avoid lost work*).
+
+## Initiating your session
+
+At the beginning of each session, I like to do a series of housekeeping steps. Please do the following before continuing:
+
+1.  Open your RStudio project. You can do so in one of three ways:
+    -   Open RStudio, click the blue square in the upper right of the window, navigate to the name of your project, and click on the name.
+    -   Open RStudio and, in the top menu bar, click File, Open Project ..., navigate to your project in the window that opens, and hit Enter.
+    -   In your system's file explorer (e.g., "finder" in Mac), navigate to the folder where your project is located and click on the file that has the extension ".Rproj".
+2.  Close any script files open in your source pane. *Note: If any of your script titles are blue, you might want to save them prior to closing!*
+3.  In the *Environment* tab of your **workspace pane**, ensure that your **Global Environment** is empty. If it is not, click the *broom* to remove all objects.
+4.  In the *History* tab of your **workspace pane**, ensure that your history is empty. If it is not, click the *broom* to remove your history.
+
+By completing the steps above, your current session will be dedicated, in its entirety, to the task at hand. That really helps organize your workflow during a given session.
+
+::: mysecret
+<i class="fas fa-user-secret" style="font-size:36px"></i>  [Always work from inside of a project!]{style="font-size: 1em;"}
+:::

@@ -1,0 +1,126 @@
+# Assignment
+
+```{r setup, include=FALSE}
+library(tidyverse)
+
+knitr::opts_chunk$set(echo = TRUE,
+                      eval = FALSE)
+```
+
+We covered assignments in some depth in the preliminary lessons. Recall that **assignment**, when used as a verb, refers to the process of adding a reference point (also called a name, key, binding, or assignment) to an object located within your computer's memory.
+
+There are two types of assignment that
+
+As it relates to reading in data, assignment allows you to work with the files once you"ve read them in. Let"s read in three of our files of interest and assign names for those objects to the global environment:
+
+```{r, eval = TRUE}
+# Assign names to the global environment:
+
+iris <- 
+  read_rds("data/raw/iris.rds")
+
+portal_observations <- 
+  readxl::read_excel("data/raw/portal.xlsx")
+```
+
+To see whether this worked, we can list the names assigned to our global environment with the function `ls()`:
+
+```{r}
+ls()
+```
+
+*Note: While `ls()` is often used programmatically, the above should be written in the console pane because we simply used it to look at our assigned names. No future code in your script will be dependent on this execution.*
+
+::: mysecret
+<i class="fas fa-user-secret" style="font-size:36px"></i>   [Follow best practices for assignments!]{style="font-size: 20px"}
+
+There are few "best practices" to consider when assigning names to the global environment:
+
+-   Use the `<-` assignment operator whenever assigning a name to the global environment. Reserve the use of `=` to assignments *within* objects (e.g., `c(roger = vocals)`).
+
+-   When the subject of an assignment is generated with a function, place the assigned name and function on separate lines.
+
+-   All global assignments should be written in the source pane.
+
+-   Do not assign the same name to multiple objects (including modified versions of an original object)
+:::
+
+### Garbage collection
+
+If an object does not contain a name, it is not saved in your computer's memory. For example, in the code below the data associated with `four_instruments.rds` are read into memory just long enough to print the object, but are not stored in our computers' memory:
+
+```{r}
+read_rds("data/raw/four_instruments.rds")
+```
+
+We can also remove a name assigned to our global environment. When we do so, the our computer will no longer maintain that file in our computer's memory. This process is known as **garbage collection**.
+
+We can remove assignments from the global environment with the function `rm()`:
+
+```{r}
+rm(portal_observations)
+```
+
+::: mysecret
+{{< fa user-secret size=2x >}} [Use `rm()` from within your script file!]{style="padding-left: 1em; font-size: 1.25em;"}
+
+Removing a name from your global environment can have downstream effects (i.e., impact code run later in a script). If `rm()` removes a name that was assigned to your global environment in your script file, avoid conducting this operation in the console pane.
+:::
+
+We can check if this worked by listing the names assigned to our global environment with `ls()`:
+
+```{r}
+ls()
+```
+
+If we want to remove multiple assignments at the same time, we separate the names of each assignment with a comma:
+
+```{r}
+rm(four_instruments, iris)
+
+ls()
+```
+
+Because the function `ls()` generates a character vector of assigned names, placing the function inside of `rm()` will remove all names assigned to the global environment. This is the second argument of the `rm` function, so we must specify the name of the argument in the function call (see `?rm`):
+
+```{r}
+# Assign names to the global environment:
+
+four_instruments <- 
+  read_lines("data/raw/four_instruments.txt")
+
+iris <- 
+  read_rds("data/raw/iris.rds")
+
+portal_observations <- 
+  readxl::read_excel("data/raw/portal.xlsx")
+
+rm(
+  list = ls())
+
+ls()
+```
+
+*Notice in the above, that the function `ls()` is nested inside of `rm()`. R executes the nested function prior to the function it is nested within.*
+
+::: now_you
+<i class="fa fa-user-circle"></i> [Assign four_instruments and iris to your global environment]{style="font-size: 1.25em;"}
+
+We will be using `four_instruments.txt` and `iris.rds` in a later part of this lesson. Please read in the files and assign their names to your global environment.
+:::
+
+```{r, include = FALSE}
+# Assign names to the global environment:
+
+four_instruments <- 
+  read_lines("data/raw/four_instruments.txt")
+
+iris <- 
+  read_rds("data/raw/iris.rds")
+```
+
+::: mysecret
+<i class="fas fa-user-secret" style="font-size:36px"></i>   [Manage your global environment!]{style="font-size: 20px"}
+
+Memory is *very* costly, especially when our data are large. As assigned names represent objects stored in our memory, maintaining objects that we don"t need can slow down processing or even lead to aborted R sessions. Likewise, our global environment will often get cluttered with object names that we no longer need. This can generate a disorganized workflow. The utility of the Environment tab of the Environment pane is diminished if our environment contains loads of assignments. For both of these reasons, it is very important to remove unused assignments from our global environment.
+:::

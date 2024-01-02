@@ -1,0 +1,47 @@
+{
+  "index.qmd": {
+    "index.html": "10e518a0"
+  },
+  "getting_started.qmd": {
+    "getting_started.html": "11b3c444"
+  },
+  "summary.qmd": {
+    "summary.html": "f7df4ab7"
+  },
+  "references.qmd": {
+    "references.html": "95b828d2"
+  },
+  "course_introduction.qmd": {
+    "course_introduction.html": "bf1366ea"
+  },
+  "reading_writing.qmd": {
+    "reading_writing.html": "3515084a"
+  },
+  "setup.qmd": {
+    "setup.html": "1681a028"
+  },
+  "creating_objects.qmd": {
+    "creating_objects.html": "36cc674e"
+  },
+  "dplyr_verbs.qmd": {
+    "dplyr_verbs.html": "c57680d6"
+  },
+  "ggplot_intro.qmd": {
+    "ggplot_intro.html": "8b4b4c8f"
+  },
+  "code_formatting.qmd": {
+    "code_formatting.html": "d6ef2aba"
+  },
+  "global_assignment.qmd": {
+    "global_assignment.html": "6cd84da2"
+  },
+  "objects_review.qmd": {
+    "objects_review.html": "760e2dd4"
+  },
+  "assignments.qmd": {
+    "assignments.html": "bbbfa99f"
+  },
+  "reference.qmd": {
+    "reference.html": "8af0d610"
+  }
+}

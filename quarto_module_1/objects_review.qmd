@@ -1,0 +1,319 @@
+# Objects in R
+
+```{r setup, include=FALSE}
+library(tidyverse)
+
+knitr::opts_chunk$set(echo = TRUE,
+                      eval = FALSE)
+```
+
+
+## Functions
+
+A **function** in R is a type of object that contains a series of commands that are used to complete a given task.
+
+### Functions -- Digging deeper
+
+We can view information about a function by typing its name in the console panel and hitting enter.
+
+```{r}
+mutate
+```
+
+The output above is not very informative, and this is often the case. R printed the name of the method the function uses to conduct its operation (`UseMethod`), where the body of the function is stored (`bytecode`), and the name of the package (`namespace`).
+
+The namespace of a function is *very* important -- it is the environment where the package's objects are located. If we only want to view the namespace of a function, we can print this information with the function `environment()`:
+
+```{r}
+environment(mutate)
+```
+
+We can view the methods associated with a function using the `methods()` function and supplying the name of the function we are interested in:
+
+```{r}
+methods(mutate)
+```
+
+We can see that this function is powered by another named function, `mutate.data.frame`. The asterisk (`*`) means that the methods are not exported from the namespace of the package. This means that it is an internal function -- it cannot be directly run on the user end.
+
+We can access a function that is not exported to the namespace using the `:::` operator. We supply the name of the package, which we determined by printing the name of the function in our console panel, the `:::` operator, and the name of the method that the function uses:
+
+```{r}
+dplyr:::mutate.data.frame
+```
+
+
+### Operators
+
+
+### Functions in packages
+
+
+
+
+
+## Common data objects
+
+It is often useful to create your own data sets. I do so frequently to provide a basis for testing how a function works, running a simulation, or iteration (coming soon!).
+
+
+### Atomic vectors
+
+An atomic vector is a one-dimensional object where each value is of the same class. We can generate an atomic vector using the combine function, `c()`:
+
+```{r}
+# A vector of musicians:
+
+c("roger",
+  "pete",
+  "john",
+  "keith")
+
+# A vector of integers:
+
+1:4
+
+# A vector of double numeric values:
+
+c(1, 2, 3, 4)
+```
+
+We can view where an object is stored in our computer's memory with the function `lobstr::ref()`:
+
+```{r}
+lobstr::ref(
+  c(1, 2, 3)
+)
+```
+
+Watch what happens, however, 
+
+We can assign a name to a vector using the `<-` operator:
+
+```{r}
+musicians <-
+  c("roger",
+    "pete",
+    "john",
+    "keith")
+```
+
+
+
+::: mysecret
+{{< fa user-secret size=2x >}} [All objects in an atomic vector must share the same class!]{style="font-size: 1.25em; padding-left: 0.5em;"}
+
+Notice what happens when we use `c()` to combine two vectors of different classes:
+
+```{r}
+c(four_instruments, 1:4)
+```
+
+Because `c()` generates an atomic vector and all values in an atomic vector must be of the same class, the integer values were changed to characters. Knowing this can help find problems in a data set. For example, if you read in a dataset and there is a column that you believe should be numeric but has been converted to a character, it is likely that there is a character value hidden somewhere in the data.
+:::
+
+
+### Lists
+
+An atomic vector is, in a way, a restrictive type of list. A list is a one-dimensional object where values, which here are called **list items**, can be of any class.
+
+We can generate a list with the `list()` function. Watch what happens when we combine `four_instruments` and `1:4` into a list:
+
+```{r}
+list(four_instruments, 1:4)
+```
+
+The classes were maintained because lists do not have to be atomic.
+
+Additionally, a list item does not have to be a single value -- it can be any object:
+
+```{r}
+list(musicians, four_instruments)
+```
+
+Notice that the list items are not named with the `list` function by default. We can view this by nesting `list()` inside of the `names()` function.
+
+```{r}
+names(
+  list(musicians, four_instruments))
+```
+
+Names can be assigned to each item using the internal assignment operator (`=`). In the below, I store the list in memory by assigning the name `my_list` to the object, and assign names to each list item with the `=` assignment operator:
+
+```{r}
+names(
+  list(
+    musicians = musicians,
+    four_instruments = four_instruments))
+```
+
+By naming the list items, I can extract the values associated with a name using the `$` operator:
+
+```{r}
+list(
+    musicians = musicians,
+    four_instruments = four_instruments)$four_instruments
+```
+
+An alternative to `list()` is the tidyverse function `tibble::lst()`. This function can be used to generate a list *and* maintain the names that were globally assigned to the child objects. The package `tibble` is part of the **core tidyverse** so, with *tidyverse* loaded you can call the function directly:
+
+```{r}
+lst(musicians, four_instruments)
+
+names(
+  lst(musicians, four_instruments))
+
+lst(musicians, four_instruments)$four_instruments
+```
+
+::: mysecret
+<i class="fas fa-user-secret" style="font-size:36px"></i>   [Restrictions are <strike>annoying</strike> great!]{style="font-size: 20px"}
+
+The flexibility of lists makes them very powerful ... unfortunately it also can make them difficult to work with and prone to errors. Restrictions in the behavior of objects makes it much easier to spot problems in our data.
+:::
+
+### Tibbles
+
+A data frame is a special type of list. Data frames have two important restrictions that distinguish them from other types of lists:
+
+-   Each column in a data frame is a list item of equivalent length.
+-   The data that comprise a column must be of the same class.
+
+We can use the function `data.frame()` to combine two vectors into a single data object:
+
+```{r}
+my_df <- 
+  data.frame(
+    musician = 
+      c("roger",
+        "pete",
+        "john",
+        "keith"),
+    role = four_instruments)
+
+my_df
+```
+
+Tibbles are a special kind of data frame. In this course, we will use tibbles more than any other kind of data object.
+
+To generate a tibble data frame, we can use the function `tibble()` to combine two vectors into a single data object:
+
+```{r}
+# A tibble of musicians and their instruments:
+
+my_tibble <- 
+  tibble(
+    musician = 
+      c("roger",
+        "pete",
+        "john",
+        "keith"),
+    role = four_instruments)
+
+my_tibble
+```
+
+It is pretty obvious that tibbles are printed differently than data frames. The differences don"t stop there though -- they are also more restrictive.
+
+For example, notice the kind of object that is returned when we use indexing to extract the second column in a data frame:
+
+```{r}
+my_df[, 2]
+```
+
+It is an atomic vector! For a tibble, the class of object does not change (it is still a tibble):
+
+```{r}
+my_tibble[, 2]
+```
+
+Tibbles are also restrictive about the use of `$`. In a data frame, columns can be extracted with partial matching:
+
+```{r}
+my_df$musician
+
+my_df$m
+```
+
+In a tibble, partial matching is not allowed:
+
+```{r}
+my_tibble$musician
+
+my_tibble$m
+```
+
+Finally (though there are more differences), data frames will recycle values during their construction:
+
+```{r}
+data.frame(
+  a = 1, 
+  b = 1:4)
+
+data.frame(
+  a = 1:2, 
+  b = 1:4)
+```
+
+Whereas tibbles will only recycle a single value:
+
+```{r, error = TRUE}
+tibble(
+  a = 1, 
+  b = 1:4)
+
+tibble(
+  a = 1:2,
+  b = 1:4)
+```
+
+::: mysecret
+<i class="fas fa-user-secret" style="font-size:36px"></i>   [Ugh ... an error message!]{style="font-size: 20px"}
+
+Error messages are annoying but incredibly useful -- we need to find a place in our hearts to appreciate them. With restrictions on a function"s usage or on the structure and composition of a data object, error messages stop us from making mistakes. When we generate an error message, it generally means that there is something that we don"t understand about the data that we are using or the function that"s throwing the error.
+:::
+
+#### Other ways of generating tibbles ...
+
+We can also construct a tibble by binding the vectors together with the `bind_cols()` function:
+
+```{r}
+# A tibble of musicians and their instruments:
+
+bind_cols(
+  musician = 
+    c("roger",
+      "pete",
+      "john",
+      "keith"),
+  role = four_instruments)
+```
+
+Because a tibble *is* a list and each column *is* a list item, we can also use `bind_cols` to combine two tibbles (by column):
+
+```{r}
+# A tibble of musicians and their instruments:
+
+bind_cols(
+  tibble(
+    musician = 
+      c("roger",
+        "pete",
+        "john",
+        "keith")),
+  tibble(
+    role = four_instruments))
+```
+
+Finally, it is often useful to use the `tribble()` function to generate a tibble. This allows for row-wise tibble construction -- in other words, the `tribble()` function allows us to generate a tibble with code that looks like the output. To do so, column names are preceded by a function operator (`~`) and separated by a comma. Values are typically written in the position that they will occupy in the resultant tibble.
+
+```{r}
+# Combining the two vectors into a tibble with tribble():
+
+tribble(
+  ~ musician, ~ role,
+  "roger",  "vocals",
+  "pete",   "guitar",
+  "john",   "bass",
+  "keith",  "drums")
+```

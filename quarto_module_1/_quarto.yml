@@ -1,0 +1,37 @@
+project:
+  type: book
+
+book:
+  title: "Module one: Course tools"
+  author: "Brian Evans"
+  date: "11/23/2023"
+  favicon: hex_favicon.png
+  chapters:
+    - index.qmd
+    - course_introduction.qmd
+    - getting_started.qmd
+    - objects_review.qmd
+    - reading_writing.qmd
+    - assignments.qmd
+    - dplyr_verbs.qmd
+    - ggplot_intro.qmd
+    - code_formatting.qmd
+    - reference.qmd
+  reader-mode: true
+  search:
+    location: sidebar
+    type: textbox
+
+bibliography: references.bib
+
+format:
+  html:
+    embed-resouces: true
+    self-contained: true
+    standalone: true
+    theme: 
+      - cosmo
+      - custom_style.scss
+
+editor: visual
+

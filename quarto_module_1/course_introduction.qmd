@@ -1,0 +1,44 @@
+# Course introduction
+
+{{< video https://www.youtube.com/embed/PCPTI0Pw76w?si=4xqDF8XuaJ1pGVF2 >}}
+
+## Preliminary content
+
+Prior to starting this course, I *strongly* suggest completing the preliminary course material. These lessons contain the core knowledge and skills that I believe an early beginner in R should have obtained. The lessons also contain elements of the language that is often overlooked by those with considerable R experience. Even if you're coming in with *loads* of R experience, you'll almost certainly learn a thing or two along the way!
+
+-   [Lesson 1: Introduction to R and RStudio](https://smbc.shinyapps.io/L0-intro_RStudio/ "https://smbc.shinyapps.io/L0-intro_RStudio/"){target="_blank"}
+-   [Lesson 2: Values](https://smbc.shinyapps.io/L1-rValues/ "https://smbc.shinyapps.io/L1-rValues/"){target="_blank"}
+-   [Lesson 3: Objects](https://smbc.shinyapps.io/L2-rObjects/ "https://smbc.shinyapps.io/L2-rObjects/"){target="_blank"}
+-   [Lesson 4: Indexing](https://smbc.shinyapps.io/L3-indexing/#section-introduction "https://smbc.shinyapps.io/4-indexing/#section-overview"){target="_blank"}
+
+## Your recipe for success
+
+This course is, to put it mildly, *challenging*. If you have a solid strategy for working through the content, however, you will emerge from this experience with an incredible skillset that is ready to take on even the toughest of data challenges.
+
+Through my experiences with students throughout the years, I've found that the following practices are typically followed by students who get the most out of this course:
+
+-   **View all content in the order that it is presented**: We are often drawn to content that relates to something we would like to learn. Because each lesson builds on the previous lessons, it is important to avoid the temptation of exploring the content out of order.
+-   **Do not skip lessons**: It is often easy to say to yourself "I already know how to do that" and, as such, either skip a given lesson or pay less attention to that lesson. Each lesson likely includes new functions, new function arguments, or important details that you may miss with even the most familiar of functions.
+-   **Code along with all content**: It is *super* important that you play an active role with each of the coding elements of this course. Avoid simply viewing or reading a given lesson -- passive learning will not get you very far in this course.
+-   **Attempt all of the "Now you!" challenges before I reveal the answers**: There are several points in the lessons in which I have you solve a problem to self-assess your progress. I call these "Now you!" challenges. Working through these challenges will help you determine what you are currently missing in your understanding of the content. They also often inform the questions that I ask during the weekly (and final) problem sets!
+-   **Read the help files for every function**: Although this can be time consuming, reading the help files will help you get a handle on what a given function can (and cannot) do. Because the arguments of a function often change over time, and because functions are sometimes deprecated, taking the time to read even the functions that you are *super* familiar with is important!
+-   **Visit, ask questions on, comment, and read the course discussion board often**: I will say it a lot, but the course discussion board is the *most important* learning tool in this course!
+-   **Generate your own *function schema***: I will provide you with an organizational system that I use to remember which functions to apply to given tasks. I call this a "function schema" and mine acts a lot like a dichotomous key (likely because I learned how to ID plants and fungi well before I learned how to code). Because we all use different methods for grouping items in our brains, I recommend coming up with your own organizational system, sharing that system with your peers, and modifying your schema along the way.
+-   **Keep a *paper* notebook on your computer desk**: Keeping notes will help you keep track of what you are learning and prepare you to get the most out of the live course sessions (Question & Answer and Review). As you go through the content, be sure to write down anything that you are not clear on. The process of transforming code language into prose is also very helpful!
+-   **After completing a lesson, annotate your scripts with comments**: It
+-   **Ask yourself "what don't I know?"**:
+-   **Avoid Stack Overflow**: 
+
+
+## Getting help
+
+Elements of this course may be challenging, but help is on the way!
+
+-   The course **Discussion board** is a great peer-to-peer learning resource and should be your first stop if you are having difficulty!
+-   **R for Data Science** ([https://r4ds.hadley.nz/](https://r4ds.hadley.nz/){target="_blank"}) is our primary textbook for this course. Written by the Posit team, this book will help clarify course concepts. I will also post *required* readings throughout the semester to supplement course materials.
+-   **Question & Answer sessions** are offered every Friday and are meant to help you with your weekly problem sets.
+-   **Weekly review sessions** are offered every Monday. In these sessions we review the problem set key and address any questions that you may have.
+-   **Virtual office hour sessions** are offered to provide one-on-one help with course materials.
+-   Please **contact us via email** if you find an error in the content or require assistance with course logistics.
+    -   Brian Evans: [evansbr\@si.edu](mailto:evansbr@si.edu){target="_blank"}
+    -   Joe Kolowski: [kolowskij\@si.edu](mailto:kolowskij@si.edu){target="_blank"}
